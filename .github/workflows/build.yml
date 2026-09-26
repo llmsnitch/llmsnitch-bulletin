@@ -12,9 +12,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0   # full history — the bundle below must be complete
       - run: pip install packaging
       - run: python3 distill_bulletin.py --workdir work --out dist
       - run: gh release view bulletin >/dev/null 2>&1 || gh release create bulletin --title "bulletin (rolling)" --notes "Rolling PyPI bulletin, schema v1. See README."
       - run: gh release upload bulletin dist/pypi.json.gz dist/pypi.json.gz.sha256 --clobber
       # ponytail: commit exists only to reset GitHub's 60-day cron disable
       - run: date -u +%FT%TZ > LAST_BUILD && git config user.name "bulletin-bot" && git config user.email "bulletin-bot@users.noreply.github.com" && git commit -qam "build $(cat LAST_BUILD)" && git push
+      # full-history bundle so offline clones can follow main without a remote
+      - run: git bundle create repo.bundle --all && gh release upload bulletin repo.bundle --clobber
