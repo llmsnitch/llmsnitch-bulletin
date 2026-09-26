@@ -13,8 +13,9 @@ Fetch with `curl -fsSL -o pypi.json.gz <url>` (the URL 302s to GitHub's CDN).
 Verify with `shasum -a 256 -c pypi.json.gz.sha256`. The release tag `bulletin`
 is rolling: each build replaces both assets in place, so the URL never changes.
 
-Format: bulletin contract **v1** (`schema_version: 1`), defined in the CLI
-repo at `docs/bulletin-spec.md`. Gzipped JSON, roughly 1 MB, ~19k entries.
+Format: bulletin contract **v1** (`schema_version: 1`), defined in
+[`SPEC.md`](SPEC.md) (shared with the `llmsnitch` CLI, which consumes this
+file). Gzipped JSON, roughly 1 MB, ~19k entries.
 
 ## How it is built
 
